@@ -1,11 +1,21 @@
+/**
+ * @file graph.c
+ * @brief Functions for managing graphs and finding paths within them.
+ */
+
 #include "graph.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h> 
+#include <stdbool.h>
 #include <limits.h>
 
-// Function to initialize a path
+
+/**
+ * Initializes a path with a given length.
+ * @param length The length of the path.
+ * @return A pointer to the newly allocated Path object.
+ */
 Path* initializePath(int length) {
     Path* path = (Path*)malloc(sizeof(Path));
     path->vertices = (int*)malloc(length * sizeof(int));
@@ -13,19 +23,31 @@ Path* initializePath(int length) {
     return path;
 }
 
-// Function to add a vertex to a path
+/**
+ * Adds a vertex to a path.
+ * @param path The path to which the vertex should be added.
+ * @param vertex The vertex to add.
+ * @return The modified path.
+ */
 Path* addToPath(Path* path, int vertex) {
     path->vertices[path->length++] = vertex;
     return path;
 }
 
-// Function to free memory allocated for a path
+/**
+ * Frees the memory allocated for a path.
+ * @param path The path to free.
+ */
 void freePath(Path* path) {
     free(path->vertices);
     free(path);
 }
 
-// Function to copy a path
+/**
+ * Copies a path.
+ * @param path The original path to copy.
+ * @return A new path that is a copy of the original.
+ */
 Path* copyPath(Path* path) {
     Path* newPath = initializePath(path->length);
     for (int i = 0; i < path->length; i++) {
@@ -34,7 +56,19 @@ Path* copyPath(Path* path) {
     return newPath;
 }
 
-// Recursive function to find paths and maximum sum
+/**
+ * Finds the maximum sum path between two vertices in a graph using recursion.
+ * @param graph The graph to search.
+ * @param startVertex The starting vertex of the path.
+ * @param endVertex The ending vertex of the path.
+ * @param visited An array indicating whether a vertex has been visited.
+ * @param currentSum The current sum of the path.
+ * @param maxSum Pointer to the maximum sum found so far.
+ * @param currentPath The current path being explored.
+ * @param allPathsPtr Pointer to a list of all paths found.
+ * @param allPathsCountPtr Pointer to the count of all paths found.
+ * @return A pointer to the list of all paths found.
+ */
 Path*** findMaxSumPathRecursive(Graph* graph, int startVertex, int endVertex, int* visited, int currentSum, int* maxSum, Path* currentPath, Path*** allPathsPtr, int* allPathsCountPtr) {
     visited[startVertex] = 1;
     addToPath(currentPath, startVertex);
@@ -65,7 +99,13 @@ Path*** findMaxSumPathRecursive(Graph* graph, int startVertex, int endVertex, in
 }
 
 
-// Helper function to check if a path already exists in the list
+/**
+ * Checks if a path already exists in a list of paths.
+ * @param paths The list of paths to check against.
+ * @param count The number of paths in the list.
+ * @param newPath The path to check for existence.
+ * @return True if the path exists, false otherwise.
+ */
 bool pathExists(Path** paths, int count, Path* newPath) {
     for (int i = 0; i < count; i++) {
         if (paths[i]->length == newPath->length) {
@@ -82,6 +122,13 @@ bool pathExists(Path** paths, int count, Path* newPath) {
     return false;
 }
 
+
+/**
+ * Finds the maximum sum path in a graph.
+ * @param graph The graph to search.
+ * @param maxSum Pointer to store the maximum sum found.
+ * @param maxPath Pointer to store the path with the maximum sum.
+ */
 void findMaxSumPath(Graph* graph, int* maxSum, Path** maxPath) {
     *maxSum = INT_MIN;
     *maxPath = NULL;
@@ -122,6 +169,12 @@ void findMaxSumPath(Graph* graph, int* maxSum, Path** maxPath) {
     free(allPaths);
 }
 
+/**
+ * Calculates the sum of a path.
+ * @param path The path to calculate the sum of.
+ * @param graph The graph containing the path.
+ * @return The sum of the path.
+ */
 int calculatePathSum(Path* path,
 Graph* graph) {
     int sum = 0;
@@ -131,7 +184,11 @@ Graph* graph) {
     return sum;
 }
 
-// Adjusted createGraph to match the declaration in graph.h
+/**
+ * Creates a graph with a specified number of vertices.
+ * @param numVertices The number of vertices in the graph.
+ * @return A pointer to the newly created graph.
+ */
 Graph* createGraph(int numVertices) {
     Graph* graph = (Graph*)malloc(sizeof(Graph));
     graph->numVertices = numVertices;
@@ -148,7 +205,13 @@ Graph* createGraph(int numVertices) {
     return graph; // Return the graph pointer
 }
 
-// Add a vertex to the graph
+/**
+ * Adds a vertex to the graph with a specified value.
+ * @param graph The graph to modify.
+ * @param vertexIndex The index where the vertex should be added.
+ * @param value The value of the vertex.
+ * @return A pointer to the newly added vertex.
+ */
 Vertex* addVertex(Graph* graph, int vertexIndex, int value) {
     Vertex* newVertex = (Vertex*)malloc(sizeof(Vertex));
     newVertex->value = value;
@@ -156,7 +219,15 @@ Vertex* addVertex(Graph* graph, int vertexIndex, int value) {
     graph->vertices[vertexIndex] = newVertex;
     return newVertex;
 }
-// Correct addEdge to check if the destination vertex exists
+
+
+/**
+ * Adds an edge between two vertices in the graph.
+ * @param graph The graph to modify.
+ * @param startVertex The starting vertex of the edge.
+ * @param endVertex The ending vertex of the edge.
+ * @return A pointer to the newly added edge, or NULL if the operation fails.
+ */
 Edge* addEdge(Graph* graph, int startVertex, int endVertex) {
     if (graph->vertices[endVertex]) {
         Edge* newEdge = (Edge*)malloc(sizeof(Edge));
@@ -167,7 +238,13 @@ Edge* addEdge(Graph* graph, int startVertex, int endVertex) {
     }
     return NULL;
 }
-// Correct removeVertex and removeEdge to check for null pointers
+
+/**
+ * Removes a vertex from the graph.
+ * @param graph The graph to modify.
+ * @param vertexIndex The index of the vertex to remove.
+ * @return True if the vertex was successfully removed, false otherwise.
+ */
 bool removeVertex(Graph* graph, int vertexIndex) {
     if (graph->vertices[vertexIndex]) {
         for (int i = 0; i < graph->numVertices; i++) {
@@ -180,7 +257,13 @@ bool removeVertex(Graph* graph, int vertexIndex) {
     return false;
 }
 
-// Function to remove an edge from the graph and return true if successful
+/**
+ * Removes an edge from the graph.
+ * @param graph The graph to modify.
+ * @param startVertex The starting vertex of the edge.
+ * @param endVertex The ending vertex of the edge.
+ * @return True if the edge was successfully removed, false otherwise.
+ */
 bool removeEdge(Graph* graph, int startVertex, int endVertex) {
     if (graph->edges[startVertex][endVertex]) {
         free(graph->edges[startVertex][endVertex]);
