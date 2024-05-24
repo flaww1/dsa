@@ -36,3 +36,8 @@ Apply advanced concepts of graph theory and programming in C to solve a computat
 ## Documentation and Testing
 - Extensively document the code, explaining the logic behind key functions and implementation decisions.
 - Execute test cases with matrices of different dimensions and complexities, demonstrating the efficiency of the developed solution.
+
+## Graph Visualization
+![Graph](https://raw.githubusercontent.com/flaww1/dsa/main/graph.png)
+
+The above image illustrates the graph representation of the problem statement. Each node represents an element of the array of integers, and edges represent connections between adjacent elements based on specific rules defined by the user.
