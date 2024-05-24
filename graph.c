@@ -1,7 +1,4 @@
-/**
- * @file graph.c
- * @brief Functions for managing graphs and finding paths within them.
- */
+
 
 #include "graph.h"
 #include <stdio.h>
@@ -10,6 +7,16 @@
 #include <stdbool.h>
 #include <limits.h>
 
+/**
+ * @file graph.c
+ * @brief Functions for managing graphs and finding paths within them.
+ */
+
+/*
+Name: Flávio Pereira
+Number: 21110
+Date: 24/05/2024
+*/
 
 /**
  * Initializes a path with a given length.
@@ -273,7 +280,12 @@ bool removeEdge(Graph* graph, int startVertex, int endVertex) {
     return false;
 }
 
-// Load a matrix from a text file and populate the graph
+/**
+ * Loads a graph from a text file.
+ * @param graph The graph to populate.
+ * @param filename The name of the file to load from.
+ * @return True if the operation was successful, false otherwise.
+ */
 bool loadMatrix(Graph* graph, const char* filename) {
     FILE* file = fopen(filename, "r");
     if (!file) {
@@ -298,7 +310,15 @@ bool loadMatrix(Graph* graph, const char* filename) {
     return true;
 }
 
-// Correct depthFirstSearch to explore all paths
+/**
+ * Performs a depth-first search on the graph.
+ * @param graph The graph to search.
+ * @param startVertex The starting vertex of the search.
+ * @param endVertex The ending vertex of the search.
+ * @param visited An array indicating whether a vertex has been visited.
+ * @param currentSum The current sum of the path.
+ * @param maxSum Pointer to the maximum sum found so far.
+ */
 void depthFirstSearch(Graph* graph, int startVertex, int endVertex, int* visited, int currentSum, int* maxSum) {
     visited[startVertex] = 1;
     Vertex* vertex = graph->vertices[startVertex];
@@ -319,7 +339,13 @@ void depthFirstSearch(Graph* graph, int startVertex, int endVertex, int* visited
     visited[startVertex] = 0;
 }
 
-// Implement breadthFirstSearch correctly
+/**
+ * Performs a breadth-first search on the graph.
+ * @param graph The graph to search.
+ * @param startVertex The starting vertex of the search.
+ * @param endVertex The ending vertex of the search.
+ * @param maxSum Pointer to store the maximum sum found.
+ */
 void breadthFirstSearch(Graph* graph, int startVertex, int endVertex, int* maxSum) {
     int* visited = (int*)calloc(graph->numVertices, sizeof(int));
     int currentSum = 0;
@@ -327,7 +353,10 @@ void breadthFirstSearch(Graph* graph, int startVertex, int endVertex, int* maxSu
     free(visited);
 }
 
-// Free the memory allocated for the graph
+/**
+ * Frees the memory allocated for a graph.
+ * @param graph The graph to free.
+ */
 void freeGraph(Graph* graph) {
     for (int i = 0; i < graph->numVertices; i++) {
         Vertex* temp = graph->vertices[i];
@@ -350,7 +379,11 @@ void freeGraph(Graph* graph) {
     free(graph);
 }
 
-
+/**
+ * Saves the graph to a file in DOT format.
+ * @param filename The name of the file to save to.
+ * @param graph The graph to save.
+ */
 void saveGraphToFile(const char* filename, Graph* graph) {
     FILE* dotFile = fopen(filename, "w");
     if (!dotFile) {
@@ -371,6 +404,11 @@ void saveGraphToFile(const char* filename, Graph* graph) {
     fclose(dotFile);
 }
 
+/**
+ * Sets connection rules for a grid graph.
+ * @param graph The graph to configure.
+ * @param numVertices The total number of vertices in the graph.
+ */
 void setConnectionRules(Graph* graph, int numVertices) {
     for (int i = 0; i < numVertices; i++) {
         for (int j = 0; j < numVertices; j++) {
