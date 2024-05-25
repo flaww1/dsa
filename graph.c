@@ -93,15 +93,18 @@ Path*** findMaxSumPathRecursive(Graph* graph, int startVertex, int endVertex, in
         }
     } else {
         for (int i = 0; i < graph->numVertices; i++) {
-            if (graph->edges[startVertex][i] && !visited[i]) {
+            if (graph->edges[startVertex][i] &&!visited[i]) {
                 // Pass updated allPathsPtr recursively
                 findMaxSumPathRecursive(graph, i, endVertex, visited, currentSum, maxSum, currentPath, allPathsPtr, allPathsCountPtr);
             }
         }
     }
 
-    visited[startVertex] = 0;
-    currentPath->length--; // Remove the last vertex from the path
+    // Decrement the length of currentPath to backtrack
+    currentPath->length--;
+    visited[startVertex] = 0; // Reset visited status after backtracking
+
+    // Return the updated allPathsPtr
     return allPathsPtr;
 }
 
@@ -147,26 +150,42 @@ void findMaxSumPath(Graph* graph, int* maxSum, Path** maxPath) {
 
     for (int i = 0; i < graph->numVertices; i++) {
         for (int j = 0; j < graph->numVertices; j++) {
-            if (i != j) {
+            if (i!= j) {
                 Path* currentPath = initializePath(graph->numVertices);
                 findMaxSumPathRecursive(graph, i, j, visited, 0, maxSum, currentPath, &allPaths, &allPathsCount);
-                freePath(currentPath);
+                // Removed the logic for updating *maxSum and *maxPath here
             }
         }
     }
 
     free(visited);
 
-    printf("Maximum sum: %d\n", *maxSum);
-
     // Print all paths with their sums
     for (int i = 0; i < allPathsCount; i++) {
-        printf("Path %d:\n", i + 1);
+        printf("\nPath %d:\n", i + 1);
+        printf("Vertices (Index - Value): ");
         for (int j = 0; j < allPaths[i]->length; j++) {
-            printf("%d ", allPaths[i]->vertices[j]); // Print vertex index
-            printf("(%d)\n", graph->vertices[allPaths[i]->vertices[j]]->value); // Print vertex value
+            printf("%d - (%d) ", allPaths[i]->vertices[j], graph->vertices[allPaths[i]->vertices[j]]->value); // Print vertex index and value
+            if (j!= allPaths[i]->length - 1) {
+                printf("-> ");
+            }
         }
-        printf("Sum: %d\n", calculatePathSum(allPaths[i], graph)); // Assuming `graph` is available here
+        printf("\nSum of path %d: %d\n", i + 1, calculatePathSum(allPaths[i], graph)); // Assuming `graph` is available here
+    }
+
+    // Check if maxPath is not NULL before printing
+    if (*maxPath!= NULL) {
+        printf("\nPath with Maximum Sum:\n");
+        printf("Vertices (Index - Value): ");
+        for (int j = 0; j < (*maxPath)->length; j++) {
+            printf("%d - (%d) ", (*maxPath)->vertices[j], graph->vertices[(*maxPath)->vertices[j]]->value); // Print vertex index and value
+            if (j!= (*maxPath)->length - 1) {
+                printf("-> ");
+            }
+        }
+        printf("\nSum of path with maximum sum: %d\n", *maxSum);
+    } else {
+        printf("\nNo path found.\n");
     }
 
     // Free the allocated memory for allPaths

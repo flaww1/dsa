@@ -1,13 +1,6 @@
 #include "graph.h"
 #include <stdio.h>
 
-/*
-Name: Flávio Pereira
-Number: 21110
-Date: 24/05/2024
-*/
-
-
 /**
  * @mainpage Main Program for Graph Operations
  *
@@ -24,7 +17,7 @@ Date: 24/05/2024
  * and frees the allocated memory for the graph.
  */
 int main() {
-    int numberOfVertices = 5;  // Number of vertices in the graph
+    int numberOfVertices = 3;  // Number of vertices in the graph
     Graph* graph = createGraph(numberOfVertices * numberOfVertices);
 
     // Load the matrix from the file and set connection rules
@@ -34,16 +27,10 @@ int main() {
     // Save the graph to a DOT file
     saveGraphToFile("graph.dot", graph);
 
-    // Find the maximum sum path and print it
+    // Find the maximum sum path
     int maxSum;
     Path* maxPath;
     findMaxSumPath(graph, &maxSum, &maxPath);
-    printf("Max Path Sum: %d\n", maxSum);
-    printf("Max Path: ");
-    for (int i = 0; i < maxPath->length; i++) {
-        printf("%d ", maxPath->vertices[i]);
-    }
-    printf("\n");
 
     // Free the allocated memory for the graph
     freeGraph(graph);
@@ -63,7 +50,7 @@ int main() {
  * @param numberOfVertices The total number of vertices in the graph.
  * @param filename The name of the file containing the matrix to load.
  */
-void loadAndSetConnectionRules(Graph* graph, int numberOfVertices, const char* filename) {
+bool loadAndSetConnectionRules(Graph* graph, int numberOfVertices, const char* filename) {
     loadMatrix(graph, filename);
     setConnectionRules(graph, numberOfVertices);
 }
